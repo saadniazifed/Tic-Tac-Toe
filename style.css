@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --square-color: #005792;
+  --body-background-color: #fdb44b;
+  --heading-font-family: "Skia";
+  --heading-font-size: 3rem;
+}
+
+body {
+  background-color: var(--body-background-color);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+body > h1 {
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size);
+}
+
+.container {
+  gap: 10px;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 40%;
+  display: flex;
+}
+
+.square {
+  background-color: var(--square-color);
+  height: 200px;
+  width: 180px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
