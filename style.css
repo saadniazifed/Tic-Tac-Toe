@@ -27,42 +27,46 @@ body > h1 {
 }
 
 .container {
-  gap: 10px;
-  align-content: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 40%;
-  display: flex;
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+  background-color: #34495e;
+  color: #fff;
+  border: 6px solid #2c3e50;
+  border-radius: 10px;
+
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
 }
 
 .square {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-image: linear-gradient(
     111.5deg,
     rgba(20, 100, 196, 1) 0.4%,
     rgba(33, 152, 214, 1) 100.2%
   );
-  height: 200px;
-  width: 180px;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border: 2px solid black;
+  border: 6px solid #2c3e50;
+  border-radius: 20px;
+  font-family: Helvetica;
+  font-weight: bold;
+  font-size: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .square:hover {
   margin-top: 2.5px;
-  background: #efefbb; /* fallback for old browsers */
+  background: #5c258d; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to right,
-    #d4d3dd,
-    #efefbb
+    #4389a2,
+    #5c258d
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
     to right,
-    #d4d3dd,
-    #efefbb
+    #4389a2,
+    #5c258d
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   cursor: pointer;
