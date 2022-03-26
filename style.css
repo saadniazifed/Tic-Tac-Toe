@@ -2,49 +2,93 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-:root {
-  --square-color: #005792;
-  --body-background-color: #000000;
-  --heading-font-family: "Poppins";
-  --heading-font-size: 3.2rem;
+  /* border: 1px solid black; */
 }
 
 body {
+  font-family: sans-serif;
+  width: 100%;
+  height: 100vh;
+  color: #fff;
+  background-color: #495057;
+}
+
+span {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.wrapper {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.billboard {
+  display: grid;
+  grid-template-columns: 200px 400px 200px;
+  grid-template-rows: auto;
+}
+
+.player-x,
+.player-o,
+.score-x,
+.score-o,
+.round,
+.title {
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  gap: 15px;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  padding: 10px 0;
+  border: 1px solid #212529;
+  background-color: #212529;
 }
 
-body > h1 {
-  font-family: var(--heading-font-family);
-  font-size: var(--heading-font-size);
-  color: firebrick;
+.score-x,
+.score-o {
+  width: 100px;
+  justify-self: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
-.container {
+.round {
+  width: 200px;
+  justify-self: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.player-o,
+.player-x {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.player-x {
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.player-o {
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.game-board {
   width: 600px;
   height: 600px;
   margin: 0 auto;
   background-color: #34495e;
-  color: #fff;
+  color: black;
   border: 6px solid #2c3e50;
   border-radius: 10px;
-
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
 }
 
 .square {
-  background-image: linear-gradient(
-    111.5deg,
-    rgba(20, 100, 196, 1) 0.4%,
-    rgba(33, 152, 214, 1) 100.2%
-  );
+  background-color: skyblue;
   border: 6px solid #2c3e50;
   border-radius: 20px;
   font-family: Helvetica;
@@ -56,30 +100,25 @@ body > h1 {
 }
 
 .square:hover {
-  margin-top: 2.5px;
-  background: #5c258d; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #4389a2,
-    #5c258d
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #4389a2,
-    #5c258d
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
   cursor: pointer;
 }
 
-.markerStyling {
-  color: white;
-  font-family: var(--heading-font-family);
-  font-size: var(--heading-font-size);
+.active-player {
+  background-color: #e67700;
 }
 
-.avoid-clicks {
-  pointer-events: none;
+@keyframes highlight {
+  from {
+    background-color: #212529;
+  }
+  to {
+    background-color: lightcoral;
+  }
+}
+
+.win-anim {
+  animation-name: highlight;
+  animation-duration: 2s;
 }
 
 /* Animation background */

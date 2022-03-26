@@ -1,111 +1,174 @@
-const playerFactory = (name, marker) => {
-  const getName = name;
-  const getMarker = marker;
+const roundEl = document.getElementById("round");
+const maxRoundEl = document.getElementById("max-round");
+const playerXEl = document.querySelector(".player-x");
+const playerOEl = document.querySelector(".player-o");
+let scoreXEl = document.querySelector(".score-x");
+let scoreOEl = document.querySelector(".score-o");
 
-  let _playerMove = 0;
+const Player = (sign) => {
+  this.sign = sign;
+  this.score = 0;
 
-  function _playerMoveCount() {
-    return _playerMove++;
-  }
-
-  function playerMoveCount() {
-    _playerMoveCount();
-  }
-
-  return { getName, getMarker, playerMoveCount };
+  return { sign, score };
 };
 
-const Game = (function () {
-  //A module that plays out entire game of Tic Tac Toe.
+const GameBoard = (() => {
+  const playerX = Player("X");
+  const playerO = Player("O");
 
-  return {};
-})();
+  let activePlayer = playerX;
+  let roundWin = false;
+  let roundDraw = false;
+  let round = 1;
+  const maxRounds = 5;
 
-//Module responsible for the Tic Tac Toe Gameboard.
-const gameBoard = (function () {
-  const gameboardArray = ["", "", "", "", "", "", "", "", ""];
+  const squares = Array.from(document.querySelectorAll(".square"));
 
-  function setMark(index, playerMarker) {
-    gameboardArray[index] = playerMarker;
-  }
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
-  return {
-    setMark,
+  const getRound = () => {
+    return round;
   };
-})();
 
-//Module Responsible for the UI Change in the game.
-const displayController = (function () {
-  //Selecting the DOM Elements
-  const _squares = document.querySelectorAll(".square");
+  const switchPlayer = () => {
+    activePlayer = activePlayer === playerX ? playerO : playerX;
 
-  const addMarkersOnScreen = function () {
-    _squares.forEach((square) => {
-      square.addEventListener("click", () => {
-        square.textContent = gameController.returnMarker();
-        square.classList.add("markerStyling");
+    if (activePlayer === playerX) {
+      playerXEl.classList.add("active-player");
+      playerOEl.classList.remove("active-player");
+    }
 
-        if (square.classList.contains("markerStyling")) {
-          square.classList.add("avoid-clicks");
-        }
-      });
+    if (activePlayer === playerO) {
+      playerOEl.classList.add("active-player");
+      playerXEl.classList.remove("active-player");
+    }
+    return activePlayer;
+  };
+
+  const checkWin = () => {
+    winConditions.forEach((condition) => {
+      // first, second and third index
+      const [f, s, t] = condition;
+
+      if (
+        squares[f].textContent === squares[s].textContent &&
+        squares[s].textContent === squares[t].textContent &&
+        squares[f].textContent !== ""
+      ) {
+        roundWin = true;
+        activePlayer.score++;
+        round++;
+
+        // add anim to winning squares
+        squares[f].classList.add("win-anim");
+        squares[s].classList.add("win-anim");
+        squares[t].classList.add("win-anim");
+
+        // reset round after 2 seconds
+        setTimeout(() => {
+          // remove anim from winning squares
+          squares[f].classList.remove("win-anim");
+          squares[s].classList.remove("win-anim");
+          squares[t].classList.remove("win-anim");
+          reset();
+        }, 2000);
+      }
     });
   };
-  return {
-    addMarkersOnScreen,
-  };
-})();
 
-//Module responsible for the flow of the game.
-const gameController = (function () {
-  //Selecting the DOM Elements
-  const _squares = document.querySelectorAll(".square");
+  const checkDraw = () => {
+    // vacant is recognize as '' (an empty string)
+    let vacantSquares = 9;
 
-  //Creating Objects.
-  const playerOne = playerFactory("Slim", "X");
-  const playerTwo = playerFactory("Shady", "O");
-
-  //Event Handler function that invokes getIndex and returnMarker function.
-  function addEventHandler() {
-    _squares.forEach((square) => {
-      square.addEventListener("click", (e) => {
-        getIndex(e);
-        returnMarker(e);
-      });
+    // keep track of empty squares
+    squares.forEach((square) => {
+      if (square.textContent !== "") vacantSquares--;
     });
-  }
 
-  const getIndex = (e) => {
-    const dataIndex = e.target.dataset.index;
-    gameBoard.setMark(dataIndex, returnMarker);
-  };
+    if (!roundWin && vacantSquares <= 0) {
+      roundDraw = true;
+      round++;
 
-  let totalMoves = 0;
-
-  const returnMarker = () => {
-    if (totalMoves % 2 != 0) {
-      return getMarkX();
-    } else if (totalMoves % 2 == 0) {
-      return getMarkO();
+      reset();
     }
   };
 
-  function getMarkO() {
-    totalMoves++;
-    playerTwo.playerMoveCount();
-    return "O";
-  }
+  // reset squares after each round
+  const reset = () => {
+    squares.forEach((square) => {
+      square.textContent = "";
+    });
+  };
 
-  function getMarkX() {
-    totalMoves++;
-    playerOne.playerMoveCount();
-    return "X";
-  }
+  const gameOver = () => {
+    if (round >= maxRounds) {
+      playerO.score = 0;
+      playerX.score = 0;
+
+      round = 1;
+
+      setTimeout(() => {
+        scoreOEl.textContent = "Score 0";
+        scoreXEl.textContent = "Score 0";
+        roundEl.textContent = round;
+        reset();
+      }, 2000);
+    }
+  };
 
   return {
-    addEventHandler,
-    returnMarker,
+    squares,
+    switchPlayer,
+    activePlayer,
+    checkWin,
+    checkDraw,
+    getRound,
+    gameOver,
   };
 })();
 
-displayController.addMarkersOnScreen();
+const DisplayController = (() => {
+  const updateSquareOnClick = (squares, player) => {
+    squares.forEach((square) => {
+      square.addEventListener("click", () => {
+        // check if square is vacant before updating
+        if (square.textContent === "") {
+          square.textContent = player.sign;
+        }
+
+        // check for round win / draw
+        GameBoard.checkWin();
+        GameBoard.checkDraw();
+
+        // update player score
+        if (player.sign === "X") scoreXEl.textContent = `Score ${player.score}`;
+        else scoreOEl.textContent = `Score ${player.score}`;
+
+        // switch active player after each turn
+        player = GameBoard.switchPlayer();
+
+        // update current round
+        roundEl.textContent = GameBoard.getRound();
+
+        // logic to check if the game is over
+        GameBoard.gameOver();
+      });
+    });
+  };
+
+  return { updateSquareOnClick };
+})();
+
+DisplayController.updateSquareOnClick(
+  GameBoard.squares,
+  GameBoard.activePlayer
+);
